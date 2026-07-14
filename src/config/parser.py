@@ -1,4 +1,4 @@
-from maze_config import MazeConfig
+from .maze_config import MazeConfig
 
 def parse_config(filepath: str) -> MazeConfig:
     """
@@ -29,10 +29,11 @@ def parse_config(filepath: str) -> MazeConfig:
             - return MazeConfig instance with the attributes
             - if error occurs during convertion
     """
-    required_keys = [
+    required_keys = {
         "width", "height", "entry",
         "exit", "output_file", "perfect"
-        ]
+    }
+    optional_keys = {"seed"}
     data = {}
     with open(filepath, "r") as file:
         for line in file:
@@ -48,7 +49,7 @@ def parse_config(filepath: str) -> MazeConfig:
         if key not in data:
             raise ValueError(f"Missing required key: {key.upper()}")
     for key in data:
-        if key not in required_keys:
+        if key not in required_keys.union(optional_keys):
             raise ValueError(f"Unauthorized key: {key.upper()}")
     try:
         width = int(data['width'])
@@ -67,13 +68,18 @@ def parse_config(filepath: str) -> MazeConfig:
         else:
             raise ValueError(f"Invalid boolean expression for PERFECT: {data['perfect']}")
 
+        if 'seed' in data:
+            seed_value = int(data['seed'])
+        else:
+            seed_value = None
         return MazeConfig(
             width=width,
             height=height,
             entry_pos=entry_pos,
             exit_pos=exit_pos,
             output_file=data['output_file'],
-            perfect=perfect_bool
+            perfect=perfect_bool,
+            seed=seed_value
         )
     except ValueError as e:
         raise ValueError(f"conversion error: {e}")

@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+# seed check hinzufuegen: wenn von user input, dann checken ob es zwischen 0 und max_int ist?, anonsten(also wenn seed=None), dann random zahl zwischen gegebenem Bereich
 @dataclass
 class MazeConfig():
     width: int
@@ -7,6 +8,7 @@ class MazeConfig():
     entry_pos: tuple[int, int]
     exit_pos: tuple[int, int]
     output_file: str
+    seed: int | None
     perfect: bool = False
 
     def __post_init__(self):
