@@ -18,7 +18,8 @@ def parse_config(filepath: str | Path) -> MazeConfig:
             - assign value to key inside of dict "data"
             - raise OSError if something goes wrong with processing/opening file
 
-        2:  - loop through required_keys and check if we have all mandatory keys
+        2:  - loop through required_keys and check if we have missing keys
+            -loop through data and check if we have unauthorized keys
         
         3:  - normalize value of 'PERFECT', set the bool depending on the value (true or false)
             - else raise error
@@ -50,6 +51,9 @@ def parse_config(filepath: str | Path) -> MazeConfig:
     for key in required_keys:
         if key not in data:
             raise ValueError(f"Missing required key: {key.upper()}")
+    for key in data:
+        if key not in required_keys:
+            raise ValueError(f"Unauthorized key: {key.upper()}")
     try:
         width = int(data['width'])
         height = int(data['height'])
