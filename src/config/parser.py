@@ -1,7 +1,6 @@
 from maze_config import MazeConfig
-from pathlib import Path
 
-def parse_config(filepath: str | Path) -> MazeConfig:
+def parse_config(filepath: str) -> MazeConfig:
     """
     Parses the config.txt and returns a MazeConfig instance, so we can pass it to functions as args if needed and for dot-notation
 
@@ -35,18 +34,15 @@ def parse_config(filepath: str | Path) -> MazeConfig:
         "exit", "output_file", "perfect"
         ]
     data = {}
-    try:
-        with open(filepath, "r") as file:
-            for line in file:
-                clean_line = line.strip()
-                if not clean_line or clean_line.startswith("#"):
-                    continue
-                if "=" not in clean_line:
-                    raise ValueError(f"{clean_line} has no '='")
-                key, value = clean_line.split("=", 1)
-                data[key.lower().strip()] = value.strip()
-    except OSError as e:
-        raise OSError(f"File error: {e}")
+    with open(filepath, "r") as file:
+        for line in file:
+            clean_line = line.strip()
+            if not clean_line or clean_line.startswith("#"):
+                continue
+            if "=" not in clean_line:
+                raise ValueError(f"{clean_line} has no '='")
+            key, value = clean_line.split("=", 1)
+            data[key.lower().strip()] = value.strip()
 
     for key in required_keys:
         if key not in data:
@@ -80,11 +76,11 @@ def parse_config(filepath: str | Path) -> MazeConfig:
             perfect=perfect_bool
         )
     except ValueError as e:
-        raise ValueError(f"Config error: {e}")
+        raise ValueError(f"conversion error: {e}")
         
 
 if __name__ == "__main__":
     try:
-        parse_config(Path(__file__).parents[2] / "config.txt")
+        parse_config("../config.txt")
     except ValueError as e:
         print(f"Error: {e}")
