@@ -16,11 +16,13 @@ class Cell:
         self.is_logo = False
 
 class MazeGenerator:
-    def __init__(self, config: "MazeConfig"):
+    def __init__(self, config: dict[str, str]):
         self.config = config
         self.grid = []
         self.build_grid()
         self.apply_logo()
+
+    def generate(self) -> None:
 
     def build_grid(self) -> None:
         grid = []
@@ -32,7 +34,7 @@ class MazeGenerator:
             grid.append(row)
         self.grid = grid
 
-    def is_neighbor(self, cell: Cell) -> dict[str, Cell]:
+    def get_neighbors(self, cell: Cell) -> dict[str, Cell]:
         y = cell.y
         x = cell.x
         neighbors = {}
@@ -45,8 +47,12 @@ class MazeGenerator:
             neighbors['S'] = self.grid[y + 1][x]
         if x > 0:
             neighbors['W'] = self.grid[y][x - 1]
-        valid_neighbors = {key: value for key, value in neighbors.items() if neighbors[key].visited != True and neighbors[key].visited != True}
-        return valid_neighbors
+        return neighbors
+    
+    def get_unvisited_neighbors(self) -> dict[str, Cell]:
+        neighbors = get_neighbors
+        unvisited_neighbors = {key: value for key, value in neighbors.items() if not neighbors[key].visited and not neighbors[key].is_logo}
+        return univisited_neighbors
     
     def remove_walls(self, current_cell: Cell, next_cell: Cell) -> None:
         if current_cell.y - 1 == next_cell.y:
@@ -57,7 +63,7 @@ class MazeGenerator:
             next_cell.walls['W'] = False
         elif current_cell.y + 1 == next_cell.y:
             current_cell.walls['S'] = False
-            next_cell.wall['N'] = False
+            next_cell.walls['N'] = False
         elif current_cell.x - 1 == next_cell.x:
             current_cell.walls['W'] = False
             next_cell.walls['E'] = False

@@ -1,6 +1,6 @@
 from .maze_config import MazeConfig
-
-def parse_config(filepath: str) -> MazeConfig:
+#konvertierung rausnehmen: erstmal values als string returnen und dann in MazeGenerator converten
+def parse_config(filepath: str) -> dict[str, str]:
     """
     Parses the config.txt and returns a MazeConfig instance, so we can pass it to functions as args if needed and for dot-notation
 
@@ -72,15 +72,15 @@ def parse_config(filepath: str) -> MazeConfig:
             seed_value = int(data['seed'])
         else:
             seed_value = None
-        return MazeConfig(
-            width=width,
-            height=height,
-            entry_pos=entry_pos,
-            exit_pos=exit_pos,
-            output_file=data['output_file'],
-            perfect=perfect_bool,
-            seed=seed_value
-        )
+        return {
+            'width'=width,
+            'height'=height,
+            'entry_pos'=entry_pos,
+            'exit_pos'=exit_pos,
+            'output_file'=data['output_file'],
+            'perfect'=perfect_bool,
+            'seed'=seed_value
+        }
     except ValueError as e:
         raise ValueError(f"conversion error: {e}")
         
