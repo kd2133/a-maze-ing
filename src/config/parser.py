@@ -51,39 +51,7 @@ def parse_config(filepath: str) -> dict[str, str]:
     for key in data:
         if key not in required_keys.union(optional_keys):
             raise ValueError(f"Unauthorized key: {key.upper()}")
-    try:
-        width = int(data['width'])
-        height = int(data['height'])
-
-        x, y = data['entry'].replace('.', ',').split(",")
-        entry_pos = int(x), int(y)
-        x, y = data['exit'].replace('.', ',').split(",")
-        exit_pos = int(x), int(y)
-        perfect_val = data['perfect'].lower()
-
-        if perfect_val == 'true':
-            perfect_bool = True
-        elif perfect_val == 'false':
-            perfect_bool = False 
-        else:
-            raise ValueError(f"Invalid boolean expression for PERFECT: {data['perfect']}")
-
-        if 'seed' in data:
-            seed_value = int(data['seed'])
-        else:
-            seed_value = None
-        return {
-            'width': width,
-            'height': height,
-            'entry_pos': entry_pos,
-            'exit_pos': exit_pos,
-            'output_file': data['output_file'],
-            'perfect': perfect_bool,
-            'seed': seed_value
-        }
-    except ValueError as e:
-        raise ValueError(f"conversion error: {e}")
-        
+    return data 
 
 if __name__ == "__main__":
     try:
