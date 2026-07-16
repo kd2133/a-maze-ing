@@ -73,13 +73,13 @@ def parse_config(filepath: str) -> dict[str, str]:
         else:
             seed_value = None
         return {
-            'width'=width,
-            'height'=height,
-            'entry_pos'=entry_pos,
-            'exit_pos'=exit_pos,
-            'output_file'=data['output_file'],
-            'perfect'=perfect_bool,
-            'seed'=seed_value
+            'width': width,
+            'height': height,
+            'entry_pos': entry_pos,
+            'exit_pos': exit_pos,
+            'output_file': data['output_file'],
+            'perfect': perfect_bool,
+            'seed': seed_value
         }
     except ValueError as e:
         raise ValueError(f"conversion error: {e}")

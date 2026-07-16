@@ -23,6 +23,7 @@ class MazeGenerator:
         self.apply_logo()
 
     def generate(self) -> None:
+        pass
 
     def build_grid(self) -> None:
         grid = []
@@ -84,6 +85,15 @@ class MazeGenerator:
             for x in range(logo_w):
                 if logo_42[y][x] == 1:
                     self.grid[start_y + y][start_x + x].is_logo = True
+    
+    def validate_logo_entry_exit(self) -> None:
+        y, x = self.config.entry
+        if self.grid[y][x].is_logo:
+            raise ValueError(f"Entry can't be on logo")
+        y, x = self.config.exit
+        if self.grid[y][x].is_logo:
+            raise ValueError(f"Exit can't be on logo")
+
 
 
     def print_grid(self) -> None:

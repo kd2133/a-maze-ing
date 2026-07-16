@@ -18,11 +18,13 @@ def main() -> None:
         #for key in neighbors:
             #print(f"{key}: {neighbors[key].y}, {neighbors[key].x}")
 
-        current_cell = maze.grid[2][2]
-        next_cell = maze.grid[2][3]
-        maze.remove_walls(current_cell, next_cell)
-        print(current_cell.walls)
-        print(next_cell.walls)
+        #current_cell = maze.grid[2][2]
+        #next_cell = maze.grid[2][3]
+        #maze.remove_walls(current_cell, next_cell)
+        #print(current_cell.walls)
+        #print(next_cell.walls)
+
+        maze.grid[2][2].is_logo = True
 
 
     except FileNotFoundError:
