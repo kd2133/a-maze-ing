@@ -1,11 +1,11 @@
 import random
 
 logo_42 = [
-    [1, 0, 0, 1, 1, 1],
-    [1, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1],
-    [0, 0, 1, 1, 0, 0],
-    [0, 0, 1, 1, 1, 1]
+    [1, 0, 0, 0, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 0, 1, 1, 1],
+    [0, 0, 1, 0, 1, 0, 0],
+    [0, 0, 1, 0, 1, 1, 1]
 ]
 
 class Cell:
@@ -18,9 +18,9 @@ class Cell:
 
 class MazeGenerator:
     def __init__(self, width: int, height: int, entry_pos: tuple[int, int],
-                 exit_pos: tuple[int, int], output_file: str, perfect: bool, seed: int | None) -> None:
-        if width <= 0 or height <= 0:
-            raise ValueError(f"Height/ Width must be higher than 0, height: {height}, width: {width}")
+                 exit_pos: tuple[int, int], output_file: str, seed: int | None, perfect: bool = False) -> None:
+        if width <= 2 or height <= 2:
+            raise ValueError(f"Height/ Width must be higher than 2, height: {height}, width: {width}")
         if entry_pos == exit_pos:
             raise ValueError(f"Entry/ exit can't be equal, entry: {entry_pos}, exit: {exit_pos}")
         y, x = entry_pos
@@ -36,12 +36,18 @@ class MazeGenerator:
         self.output_file = output_file
         self.perfect = perfect
         self.seed = seed
+        if self.seed is not None:
+            random.seed(self.seed)
         self.grid = []
         self.generate_maze()
 
     def generate_maze(self) -> None:
         self.build_grid()
-        #self.apply_logo()
+        self.apply_logo()
+        self.validate_logo_entry_exit()
+        self.dfs()
+        if not self.perfect:
+            self.perfect_false()
     
     def build_grid(self) -> None:
         grid = []
@@ -72,19 +78,19 @@ class MazeGenerator:
         unvisited_neighbors = {key: value for key, value in neighbors.items() if not neighbors[key].visited and not neighbors[key].is_logo}
         return unvisited_neighbors
     
-    def remove_walls(self, current_cell: Cell, next_cell: Cell) -> None:
+    def set_walls(self, current_cell: Cell, next_cell: Cell, bool_var: bool) -> None:
         if current_cell.y - 1 == next_cell.y:
-            current_cell.walls['N'] = False
-            next_cell.walls['S'] = False
+            current_cell.walls['N'] = bool_var
+            next_cell.walls['S'] = bool_var
         elif current_cell.x + 1 == next_cell.x:
-            current_cell.walls['E'] = False
-            next_cell.walls['W'] = False
+            current_cell.walls['E'] = bool_var
+            next_cell.walls['W'] = bool_var
         elif current_cell.y + 1 == next_cell.y:
-            current_cell.walls['S'] = False
-            next_cell.walls['N'] = False
+            current_cell.walls['S'] = bool_var
+            next_cell.walls['N'] = bool_var
         elif current_cell.x - 1 == next_cell.x:
-            current_cell.walls['W'] = False
-            next_cell.walls['E'] = False
+            current_cell.walls['W'] = bool_var
+            next_cell.walls['E'] = bool_var
 
 
     def apply_logo(self) -> None:
@@ -116,29 +122,58 @@ class MazeGenerator:
         stack[0].visited = True
         while(stack):
             current = stack[-1]
+            cell = current
             neighbors = self.get_unvisited_neighbors(current)
-            print(f"y:{current.y}, x:{current.x}")
             if neighbors:
                 neighbor = random.choice(list(neighbors.values()))
-                self.remove_walls(current, neighbor)
+                #print(f"y:{current.y}, x:{current.x} -> {neighbor.y} {neighbor.x}")
+                self.set_walls(current, neighbor, False)
                 stack.append(neighbor)
                 neighbor.visited = True
             else:
-                print("backtrack")
+                #print("backtrack")
                 stack.pop()
 
+    def is_3x3(self, cell: Cell) -> bool:
+        y = cell.y
+        x = cell.x
+        is_3x3 = [
+            self.grid[y][x].walls['E'], self.grid[y][x + 1].walls['E'],
+            self.grid[y][x].walls['S'], self.grid[y][x + 1].walls['S'],
+            self.grid[y][x + 2].walls['S'], self.grid[y + 1][x + 2].walls['S'],
+            self.grid[y + 1][x].walls['E'], self.grid[y + 1][x + 1].walls['E'],
+            self.grid[y + 1][x].walls['S'], self.grid[y + 1][x + 1].walls['S'],
+            self.grid[y + 2][x].walls['E'], self.grid[y + 2][x + 1].walls['E']
+        ]
+        if not any(is_3x3):
+            return True
+        return False
 
-
-    def print_grid(self) -> None:
+    def has_3x3(self) -> bool:
+        for y in range(self.height - 2):
+            for x in range(self.width - 2):
+                if self.is_3x3(self.grid[y][x]):
+                    return True
+        return False
+    
+    def perfect_false(self) -> None:
+        neighbors_with_wall = []
         for row in self.grid:
-            line = ""
             for cell in row:
-                if cell.is_logo:
-                    line += "@"
-                else:
-                    line += "#"
-            print(line)
-            
-            
+                for direction, neighbor in self.get_neighbors(cell).items():
+                    if cell.is_logo or neighbor.is_logo:
+                        continue
+                    if direction in ('E', 'S') and cell.walls[direction]:
+                        neighbors_with_wall.append((cell, neighbor))
 
-
+        random.shuffle(neighbors_with_wall)
+        max_removals = int(len(neighbors_with_wall) * 0.3)
+        removed_count = 0
+        for current, neighbor in neighbors_with_wall:
+            if removed_count >= max_removals:
+                break
+            self.set_walls(current, neighbor, False)
+            if self.has_3x3():
+                self.set_walls(current, neighbor, True)
+            else:
+                removed_count += 1
