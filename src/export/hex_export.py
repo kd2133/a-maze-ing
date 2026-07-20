@@ -1,9 +1,12 @@
 from src.generator.maze_generator import MazeGenerator
+from src.solver.maze_solver import MazeSolver
 
 def hex_export(maze: MazeGenerator, filename: str) -> None:
     if not filename:
         raise ValueError("No output file was passed.")
     try:
+        solver = MazeSolver(maze)
+        path = solver.bfs()
         with open(filename, "w") as file:
             for row in maze.grid:
                 line = ""
@@ -26,6 +29,8 @@ def hex_export(maze: MazeGenerator, filename: str) -> None:
             y, x = maze.exit
             exit_pos = f"{y},{x}"
             file.write(exit_pos)
+            file.write("\n")
+            file.write("".join(path) + "\n")
     except OSError as e:
         raise OSError(f"Could not write hex output file: {e}")
 
