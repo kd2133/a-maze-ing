@@ -1,11 +1,11 @@
      
      
-WIDTH=10
-HEIGHT=9
-ENTRY=5, 5
+WIDTH=15
+HEIGHT=15
+ENTRY=2, 2
 EXIT=4, 4
-OUTPUT_FILE=maze.txt
+OUTPUT_FILE= output_maze.txt
 PERFECT=TRUE
-SEED=42
+#SEED=42
 
 
