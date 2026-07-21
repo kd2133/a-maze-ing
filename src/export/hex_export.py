@@ -1,12 +1,11 @@
 from src.generator.maze_generator import MazeGenerator
-from src.solver.maze_solver import MazeSolver
+from src.solver.maze_solver import bfs
 
 def hex_export(maze: MazeGenerator, filename: str) -> None:
     if not filename:
         raise ValueError("No output file was passed.")
     try:
-        solver = MazeSolver(maze)
-        path = solver.bfs()
+        path = bfs(maze)
         with open(filename, "w") as file:
             for row in maze.grid:
                 line = ""
