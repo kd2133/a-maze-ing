@@ -1,4 +1,3 @@
-from .maze_config import MazeConfig
 #konvertierung rausnehmen: erstmal values als string returnen und dann in MazeGenerator converten
 def parse_config(filepath: str) -> dict[str, str]:
     """
