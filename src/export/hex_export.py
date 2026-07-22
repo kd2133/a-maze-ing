@@ -1,6 +1,7 @@
 from src.generator.maze_generator import MazeGenerator
 from src.solver.maze_solver import bfs
 
+
 def hex_export(maze: MazeGenerator, filename: str) -> None:
     if not filename:
         raise ValueError("No output file was passed.")
@@ -32,7 +33,3 @@ def hex_export(maze: MazeGenerator, filename: str) -> None:
             file.write("".join(path) + "\n")
     except OSError as e:
         raise OSError(f"Could not write hex output file: {e}")
-
-if __name__ == "__main__":
-    maze = MazeGenerator()
-    hex_export() 

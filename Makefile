@@ -1,12 +1,12 @@
 PYTHON := python3
-NAME := a-maze-ing.py
+NAME := a_maze_ing.py
+
+run:
+	$(PYTHON) $(NAME)
 
 install:
 	@echo "This Project needs no external dependencies!"
 	@echo "Nothing to be installed..."
-
-run:
-	$(PYTHON) $(NAME)
 
 debug:
 	$(PYTHON) -m pdb $(NAME)

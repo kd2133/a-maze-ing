@@ -16,14 +16,13 @@ def bfs(maze: MazeGenerator) -> list[str]:
     end_y, end_x = maze.exit
     start = maze.grid[start_y][start_x]
     end = maze.grid[end_y][end_x]
-    #print(end.y, end.x)
     queue = deque([start])
     came_from: dict[Cell, tuple[Cell, str]] = {}
     visited = {start}
     while queue:
         current = queue.popleft()
         if current is end:
-            return _reconstruct_path(came_from, start, end)
+            return gen_path_list(came_from, start, end)
         for direction, neighbor in get_open_neighbors(maze, current).items():
             if neighbor not in visited:
                 visited.add(neighbor)
@@ -32,7 +31,7 @@ def bfs(maze: MazeGenerator) -> list[str]:
     raise ValueError("couldn't find path between entry and exit")
 
 
-def _reconstruct_path(
+def gen_path_list(
     came_from: dict[Cell, tuple[Cell, str]],
     start: Cell,
     end: Cell,
@@ -42,7 +41,6 @@ def _reconstruct_path(
     while current is not start:
         current, direction = came_from[current]
         current.is_path = True
-        print(current.y, current.x)
         path.append(direction)
     path.reverse()
     return path
