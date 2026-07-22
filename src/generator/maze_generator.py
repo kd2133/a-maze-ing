@@ -1,5 +1,6 @@
 import random
 
+
 logo_42 = [
     [1, 0, 0, 0, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 1],
@@ -7,6 +8,7 @@ logo_42 = [
     [0, 0, 1, 0, 1, 0, 0],
     [0, 0, 1, 0, 1, 1, 1]
 ]
+
 
 class Cell:
     def __init__(self, y: int, x: int) -> None:
@@ -17,16 +19,26 @@ class Cell:
         self.is_logo = False
         self.is_path = False
 
+
 class MazeGenerator:
-    def __init__(self, width: int, height: int, entry_pos: tuple[int, int],
-                 exit_pos: tuple[int, int], output_file: str, seed: int | None, perfect: bool = False) -> None:
+    def __init__(
+        self, width: int, height: int, entry_pos: tuple[int, int],
+        exit_pos: tuple[int, int], output_file: str,
+        seed: int | None, perfect: bool = False
+    ) -> None:
         if width <= 2 or height <= 2:
-            raise ValueError(f"Height/ Width must be higher than 2, height: {height}, width: {width}")
+            raise ValueError(
+                f"Height/ Width must be higher than 2, "
+                f"height: {height}, width: {width}"
+            )
         if entry_pos == exit_pos:
-            raise ValueError(f"Entry/ exit can't be equal, entry: {entry_pos}, exit: {exit_pos}")
+            raise ValueError(
+                f"Entry/ exit can't be equal, "
+                f"entry: {entry_pos}, exit: {exit_pos}"
+            )
         y, x = entry_pos
         if x < 0 or x >= width or y < 0 or y >= height:
-            raise ValueError(f"Entry {entry_pos} outside the maze.") 
+            raise ValueError(f"Entry {entry_pos} outside the maze.")
         y, x = exit_pos
         if x < 0 or x >= width or y < 0 or y >= height:
             raise ValueError(f"Exit {exit_pos} outside the maze.")
@@ -39,7 +51,7 @@ class MazeGenerator:
         self.seed = seed
         if self.seed is not None:
             random.seed(self.seed)
-        self.grid = []
+        self.grid: list[list[Cell]] = []
         self.generate_maze()
 
     def generate_maze(self) -> None:
@@ -49,7 +61,7 @@ class MazeGenerator:
         self.dfs()
         if not self.perfect:
             self.perfect_false()
-    
+
     def build_grid(self) -> None:
         grid = []
         for y in range(self.height):
@@ -73,13 +85,18 @@ class MazeGenerator:
         if x > 0:
             neighbors['W'] = self.grid[y][x - 1]
         return neighbors
-    
+
     def get_unvisited_neighbors(self, cell: Cell) -> dict[str, Cell]:
         neighbors = self.get_neighbors(cell)
-        unvisited_neighbors = {key: value for key, value in neighbors.items() if not neighbors[key].visited and not neighbors[key].is_logo}
+        unvisited_neighbors = {
+            key: value for key, value in neighbors.items()
+            if not neighbors[key].visited and not neighbors[key].is_logo
+        }
         return unvisited_neighbors
-    
-    def set_walls(self, current_cell: Cell, next_cell: Cell, bool_var: bool) -> None:
+
+    def set_walls(
+        self, current_cell: Cell, next_cell: Cell, bool_var: bool
+    ) -> None:
         if current_cell.y - 1 == next_cell.y:
             current_cell.walls['N'] = bool_var
             next_cell.walls['S'] = bool_var
@@ -93,14 +110,15 @@ class MazeGenerator:
             current_cell.walls['W'] = bool_var
             next_cell.walls['E'] = bool_var
 
-
     def apply_logo(self) -> None:
         margin = 2
         logo = logo_42
         logo_h = len(logo)
         logo_w = len(logo[0])
-        logo_fits = (self.width >= logo_w + margin * 2 and
-                    self.height >= logo_h + margin * 2)
+        logo_fits = (
+            self.width >= logo_w + margin * 2
+            and self.height >= logo_h + margin * 2
+        )
         if not logo_fits:
             raise ValueError("Grid too small for logo!")
         start_x = int((self.width - logo_w) / 2)
@@ -109,30 +127,27 @@ class MazeGenerator:
             for x in range(logo_w):
                 if logo_42[y][x] == 1:
                     self.grid[start_y + y][start_x + x].is_logo = True
-    
+
     def validate_logo_entry_exit(self) -> None:
         y, x = self.entry
         if self.grid[y][x].is_logo:
-            raise ValueError(f"Entry can't be on logo")
+            raise ValueError("Entry can't be on logo")
         y, x = self.exit
         if self.grid[y][x].is_logo:
-            raise ValueError(f"Exit can't be on logo")
+            raise ValueError("Exit can't be on logo")
 
     def dfs(self) -> None:
         stack = [self.grid[0][0]]
         stack[0].visited = True
-        while(stack):
+        while stack:
             current = stack[-1]
-            cell = current
             neighbors = self.get_unvisited_neighbors(current)
             if neighbors:
                 neighbor = random.choice(list(neighbors.values()))
-                #print(f"y:{current.y}, x:{current.x} -> {neighbor.y} {neighbor.x}")
                 self.set_walls(current, neighbor, False)
                 stack.append(neighbor)
                 neighbor.visited = True
             else:
-                #print("backtrack")
                 stack.pop()
 
     def is_3x3(self, cell: Cell) -> bool:
@@ -141,9 +156,12 @@ class MazeGenerator:
         is_3x3 = [
             self.grid[y][x].walls['E'], self.grid[y][x + 1].walls['E'],
             self.grid[y][x].walls['S'], self.grid[y][x + 1].walls['S'],
-            self.grid[y][x + 2].walls['S'], self.grid[y + 1][x + 2].walls['S'],
-            self.grid[y + 1][x].walls['E'], self.grid[y + 1][x + 1].walls['E'],
-            self.grid[y + 1][x].walls['S'], self.grid[y + 1][x + 1].walls['S'],
+            self.grid[y][x + 2].walls['S'],
+            self.grid[y + 1][x + 2].walls['S'],
+            self.grid[y + 1][x].walls['E'],
+            self.grid[y + 1][x + 1].walls['E'],
+            self.grid[y + 1][x].walls['S'],
+            self.grid[y + 1][x + 1].walls['S'],
             self.grid[y + 2][x].walls['E'], self.grid[y + 2][x + 1].walls['E']
         ]
         if not any(is_3x3):
@@ -156,7 +174,7 @@ class MazeGenerator:
                 if self.is_3x3(self.grid[y][x]):
                     return True
         return False
-    
+
     def perfect_false(self) -> None:
         neighbors_with_wall = []
         for row in self.grid:

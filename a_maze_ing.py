@@ -1,18 +1,20 @@
-import sys
 import traceback
-import random
 from src.config.parser import parse_config
 from src.generator.maze_generator import MazeGenerator
 from src.export.hex_export import hex_export
 from src.ui.display import display
 
 
-# except Exception also sicherheitsnetz fuer unerwartete bugs, und traceback damit wir sehen was es ist weil Exception auch unsere coding Fehler handled und wir ohne traceback vielleicht nicht drauf kommen wuerden?
-# noch hinzufuegen maybe: prints auf stderr statt stdout, und sys.exit() nach exception?
+# except Exception also sicherheitsnetz fuer unerwartete bugs,
+# und traceback damit wir sehen was es ist weil Exception auch
+# unsere coding Fehler handled und wir ohne traceback
+# vielleicht nicht drauf kommen wuerden?
+
+# noch hinzufuegen maybe: prints auf stderr statt stdout,
+# und sys.exit() nach exception?
 
 
-
-def build_maze_convert_config(config: dict[str, str]) -> None:
+def build_maze_convert_config(config: dict[str, str]) -> MazeGenerator:
     width = int(config['width'])
     height = int(config['height'])
 
@@ -25,15 +27,16 @@ def build_maze_convert_config(config: dict[str, str]) -> None:
     if perfect_val == 'true':
         perfect_bool = True
     elif perfect_val == 'false':
-        perfect_bool = False 
+        perfect_bool = False
     else:
-        raise ValueError(f"Invalid boolean expression for PERFECT: {config['perfect']}")
+        raise ValueError(f"Invalid boolean expression for PERFECT: "
+                         f"{config['perfect']}")
 
     if 'seed' in config:
         seed_value = int(config['seed'])
     else:
         seed_value = None
-    return MazeGenerator (
+    return MazeGenerator(
         width=width,
         height=height,
         entry_pos=entry_pos,
@@ -42,6 +45,7 @@ def build_maze_convert_config(config: dict[str, str]) -> None:
         perfect=perfect_bool,
         seed=seed_value
     )
+
 
 def main() -> None:
     try:
@@ -76,15 +80,10 @@ def main() -> None:
             else:
                 print("\nNot a valid choice! Try again!")
 
-
-
-
-
-
     except FileNotFoundError as e:
         print(f"Error: File not found {e}")
     except OSError as e:
-        print(f"Error while accessing file '{filename}': {e}")
+        print(f"Error while accessing file: {e}")
     except ValueError as e:
         print(f"Configuration error: {e}")
     except Exception as e:
@@ -92,6 +91,7 @@ def main() -> None:
         traceback.print_exc()
     except KeyboardInterrupt:
         print("\n\nGoodbye!")
+
 
 if __name__ == "__main__":
     main()

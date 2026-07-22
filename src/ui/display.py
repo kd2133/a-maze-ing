@@ -1,6 +1,7 @@
 import random
 from src.generator.maze_generator import MazeGenerator, Cell
 
+
 last_wall_color: str | None = None
 last_logo_color: str | None = None
 
@@ -26,7 +27,11 @@ def pick_color(color_list: list[str], last: str | None) -> str:
     return random.choice(choices)
 
 
-def display(maze: MazeGenerator, path: bool = False, change_color: bool = False) -> None:
+def display(
+        maze: MazeGenerator,
+        path: bool = False,
+        change_color: bool = False
+        ) -> None:
     global last_wall_color, last_logo_color
 
     if change_color or last_wall_color is None or last_logo_color is None:
