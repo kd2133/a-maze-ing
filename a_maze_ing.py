@@ -47,6 +47,7 @@ def main() -> None:
     try:
         config = parse_config("config.txt")
         maze = build_maze_convert_config(config)
+        path = False
         hex_export(maze, maze.output_file)
         display(maze)
         while True:
@@ -62,9 +63,13 @@ def main() -> None:
                 hex_export(maze, maze.output_file)
                 display(maze)
             elif user_input == "2":
-                print("Not available yet")
+                if path:
+                    path = False
+                elif not path:
+                    path = True
+                display(maze, path)
             elif user_input == "3":
-                display(maze)
+                display(maze, path, change_color=True)
             elif user_input == "4":
                 print("\nGoodbye!")
                 break
