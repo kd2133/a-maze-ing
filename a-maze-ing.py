@@ -16,10 +16,10 @@ def build_maze_convert_config(config: dict[str, str]) -> None:
     width = int(config['width'])
     height = int(config['height'])
 
-    x, y = config['entry'].replace('.', ',').split(",")
-    entry_pos = int(x), int(y)
-    x, y = config['exit'].replace('.', ',').split(",")
-    exit_pos = int(x), int(y)
+    y, x = config['entry'].replace('.', ',').split(",")
+    entry_pos = int(y), int(x)
+    y, x = config['exit'].replace('.', ',').split(",")
+    exit_pos = int(y), int(x)
     perfect_val = config['perfect'].lower()
 
     if perfect_val == 'true':
