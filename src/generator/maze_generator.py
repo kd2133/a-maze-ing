@@ -15,6 +15,7 @@ class Cell:
         self.walls = {'N': True, 'E': True, 'S': True, 'W': True}
         self.visited = False
         self.is_logo = False
+        self.is_path = False
 
 class MazeGenerator:
     def __init__(self, width: int, height: int, entry_pos: tuple[int, int],

@@ -16,6 +16,7 @@ def bfs(maze: MazeGenerator) -> list[str]:
     end_y, end_x = maze.exit
     start = maze.grid[start_y][start_x]
     end = maze.grid[end_y][end_x]
+    #print(end.y, end.x)
     queue = deque([start])
     came_from: dict[Cell, tuple[Cell, str]] = {}
     visited = {start}
@@ -40,6 +41,8 @@ def _reconstruct_path(
     current = end
     while current is not start:
         current, direction = came_from[current]
+        current.is_path = True
+        print(current.y, current.x)
         path.append(direction)
     path.reverse()
     return path

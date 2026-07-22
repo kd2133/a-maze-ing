@@ -76,8 +76,8 @@ def main() -> None:
 
 
 
-    except FileNotFoundError:
-        print(f"Error: File not found")
+    except FileNotFoundError as e:
+        print(f"Error: File not found {e}")
     except OSError as e:
         print(f"Error while accessing file '{filename}': {e}")
     except ValueError as e:
