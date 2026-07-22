@@ -19,7 +19,7 @@ def hex_export(maze: MazeGenerator, filename: str) -> None:
                         value += 4
                     if cell.walls['W']:
                         value += 8
-                    line += f"{format(value, "X")}"
+                    line += f"{value:X}"
                 file.write(line + "\n")
 
             y, x = maze.entry
