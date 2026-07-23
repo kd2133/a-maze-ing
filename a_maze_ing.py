@@ -1,17 +1,9 @@
+import sys
 import traceback
 from src.config.parser import parse_config
 from src.generator.maze_generator import MazeGenerator
 from src.export.hex_export import hex_export
 from src.ui.display import display
-
-
-# except Exception also sicherheitsnetz fuer unerwartete bugs,
-# und traceback damit wir sehen was es ist weil Exception auch
-# unsere coding Fehler handled und wir ohne traceback
-# vielleicht nicht drauf kommen wuerden?
-
-# noch hinzufuegen maybe: prints auf stderr statt stdout,
-# und sys.exit() nach exception?
 
 
 def build_maze_convert_config(config: dict[str, str]) -> MazeGenerator:
@@ -48,8 +40,11 @@ def build_maze_convert_config(config: dict[str, str]) -> MazeGenerator:
 
 
 def main() -> None:
+    if len(sys.argv) != 2:
+        print("Usage: python3 a_maze_ing.py <config>")
+        return
     try:
-        config = parse_config("config.txt")
+        config = parse_config(sys.argv[1])
         maze = build_maze_convert_config(config)
         path = False
         hex_export(maze, maze.output_file)
@@ -62,7 +57,7 @@ def main() -> None:
             print("4. Quit")
             user_input = input("Choice? (1-4): ")
             if user_input == "1":
-                config = parse_config("config.txt")
+                config = parse_config(sys.argv[1])
                 maze = build_maze_convert_config(config)
                 hex_export(maze, maze.output_file)
                 display(maze)
@@ -81,16 +76,21 @@ def main() -> None:
                 print("\nNot a valid choice! Try again!")
 
     except FileNotFoundError as e:
-        print(f"Error: File not found {e}")
+        print(f"Error: File not found {e}", file=sys.stderr)
+        sys.exit(1)
     except OSError as e:
-        print(f"Error while accessing file: {e}")
+        print(f"Error while accessing file: {e}", file=sys.stderr)
+        sys.exit(1)
     except ValueError as e:
-        print(f"Configuration error: {e}")
+        print(f"Configuration error: {e}", file=sys.stderr)
+        sys.exit(1)
     except Exception as e:
-        print(f"Unexpected error: {e}")
-        traceback.print_exc()
+        print(f"Unexpected error: {e}", file=sys.stderr)
+        sys.exit(1)
+        traceback.print_exc()  # rausnehmen vor Abgabe !!!!!!!!!!!!!!
     except KeyboardInterrupt:
-        print("\n\nGoodbye!")
+        print("\n\nGoodbye!", file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

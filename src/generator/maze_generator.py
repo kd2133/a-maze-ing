@@ -120,7 +120,7 @@ class MazeGenerator:
             and self.height >= logo_h + margin * 2
         )
         if not logo_fits:
-            raise ValueError("Grid too small for logo!")
+            return
         start_x = int((self.width - logo_w) / 2)
         start_y = int((self.height - logo_h) / 2)
         for y in range(logo_h):
@@ -138,15 +138,14 @@ class MazeGenerator:
 
     def dfs(self) -> None:
         stack = [self.grid[0][0]]
-        stack[0].visited = True
         while stack:
             current = stack[-1]
+            current.visited = True
             neighbors = self.get_unvisited_neighbors(current)
             if neighbors:
                 neighbor = random.choice(list(neighbors.values()))
                 self.set_walls(current, neighbor, False)
                 stack.append(neighbor)
-                neighbor.visited = True
             else:
                 stack.pop()
 
