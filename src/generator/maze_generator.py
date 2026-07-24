@@ -57,9 +57,7 @@ class MazeGenerator:
         self.exit = exit_pos
         self.output_file = output_file
         self.perfect = perfect
-        self.seed = seed
-        if self.seed is not None:
-            random.seed(self.seed)
+        self.seed = random.Random(seed)
         self.grid: list[list[Cell]] = []
         self.generate_maze()
 
@@ -152,7 +150,7 @@ class MazeGenerator:
             current.visited = True
             neighbors = self.get_unvisited_neighbors(current)
             if neighbors:
-                neighbor = random.choice(list(neighbors.values()))
+                neighbor = self.seed.choice(list(neighbors.values()))
                 self.set_walls(current, neighbor, False)
                 stack.append(neighbor)
             else:
@@ -193,7 +191,7 @@ class MazeGenerator:
                     if direction in ('E', 'S') and cell.walls[direction]:
                         neighbors_with_wall.append((cell, neighbor))
 
-        random.shuffle(neighbors_with_wall)
+        self.seed.shuffle(neighbors_with_wall)
         max_removals = int(len(neighbors_with_wall) * 0.3)
         removed_count = 0
         for current, neighbor in neighbors_with_wall:

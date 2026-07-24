@@ -24,10 +24,10 @@ def hex_export(maze: MazeGenerator, filename: str) -> None:
                 file.write(line + "\n")
 
             y, x = maze.entry
-            entry_pos = f"{y},{x}"
+            entry_pos = f"{x},{y}"
             file.write("\n" + entry_pos + "\n")
             y, x = maze.exit
-            exit_pos = f"{y},{x}"
+            exit_pos = f"{x},{y}"
             file.write(exit_pos)
             file.write("\n")
             file.write("".join(path) + "\n")
