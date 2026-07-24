@@ -42,7 +42,7 @@ def build_maze_convert_config(config: dict[str, str]) -> MazeGenerator:
 def main() -> None:
     if len(sys.argv) != 2:
         print(f"Usage: python3 {sys.argv[0]} <config_file>")
-        return
+        sys.exit(1)
     try:
         config = parse_config(sys.argv[1])
         maze = build_maze_convert_config(config)
