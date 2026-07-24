@@ -10,9 +10,9 @@ def build_maze_convert_config(config: dict[str, str]) -> MazeGenerator:
     width = int(config['width'])
     height = int(config['height'])
 
-    y, x = config['entry'].replace('.', ',').split(",")
+    x, y = config['entry'].replace('.', ',').split(",")
     entry_pos = int(y), int(x)
-    y, x = config['exit'].replace('.', ',').split(",")
+    x, y = config['exit'].replace('.', ',').split(",")
     exit_pos = int(y), int(x)
     perfect_val = config['perfect'].lower()
 
@@ -84,12 +84,15 @@ def main() -> None:
     except ValueError as e:
         print(f"Configuration error: {e}", file=sys.stderr)
         sys.exit(1)
-    except Exception as e:
-        print(f"Unexpected error: {e}", file=sys.stderr)
-        sys.exit(1)
-        traceback.print_exc()  # rausnehmen vor Abgabe !!!!!!!!!!!!!!
     except KeyboardInterrupt:
         print("\n\nGoodbye!", file=sys.stderr)
+        sys.exit(1)
+    except EOFError as e:
+        print(f"\n\nEOF Error: {e}", file=sys.stderr)
+        sys.exit(1)
+    except Exception as e:
+        print(f"Unexpected error: {e}", file=sys.stderr)
+        traceback.print_exc()  # rausnehmen vor Abgabe !!!!!!!!!!!!!!
         sys.exit(1)
 
 

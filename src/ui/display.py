@@ -1,12 +1,11 @@
 import random
-from src.solver.maze_solver import get_open_neighbors
 from src.generator.maze_generator import MazeGenerator, Cell
 
 
 last_wall_color: str | None = None
 
 WALL_COLORS = [
-    "\033[34m", 
+    "\033[34m",
     "\033[35m",
     "\033[36m",
 ]
