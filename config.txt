@@ -1,11 +1,11 @@
      
      
-WIDTH=3
-HEIGHT=3
+WIDTH=53
+HEIGHT=70
 ENTRY=0.0
-EXIT=2.2
+EXIT=19.19
 OUTPUT_FILE= output_maze.txt
-PERFECT=False
+PERFECT=True
 #SEED=42
 
 

@@ -1,22 +1,20 @@
 import random
+from src.solver.maze_solver import get_open_neighbors
 from src.generator.maze_generator import MazeGenerator, Cell
 
 
 last_wall_color: str | None = None
-last_logo_color: str | None = None
 
 WALL_COLORS = [
-    "\033[90m", "\033[30m", "\033[31m", "\033[33m",
-    "\033[34m", "\033[35m",
+    "\033[34m", 
+    "\033[35m",
+    "\033[36m",
 ]
-LOGO_COLORS = [
-    "\033[1;96m", "\033[1;92m", "\033[1;97m",
-    "\033[1;93m", "\033[1;95m",
-]
+LOGO_COLOR = "\033[1;33m"
 
 ENTRY_COLOR = "\033[1;31m"
 EXIT_COLOR = "\033[1;32m"
-PATH_COLOR = "\033[1;94m"
+PATH_COLOR = "\033[37m"
 
 RESET = "\033[0m"
 SPACE = "  "
@@ -32,14 +30,13 @@ def display(
         path: bool = False,
         change_color: bool = False
         ) -> None:
-    global last_wall_color, last_logo_color
+    global last_wall_color
 
-    if change_color or last_wall_color is None or last_logo_color is None:
+    if change_color or last_wall_color is None:
         last_wall_color = pick_color(WALL_COLORS, last_wall_color)
-        last_logo_color = pick_color(LOGO_COLORS, last_logo_color)
 
     wall = f"{last_wall_color}██{RESET}"
-    logo = f"{last_logo_color}██{RESET}"
+    logo = f"{LOGO_COLOR}██{RESET}"
     entry_cell = f"{ENTRY_COLOR}██{RESET}"
     exit_cell = f"{EXIT_COLOR}██{RESET}"
     path_cell = f"{PATH_COLOR}██{RESET}"
