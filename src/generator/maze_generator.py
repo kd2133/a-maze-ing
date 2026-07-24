@@ -1,5 +1,4 @@
 import random
-import shutil
 
 
 logo_42 = [
@@ -32,13 +31,6 @@ class MazeGenerator:
                 f"Height/ Width must be higher than 2, "
                 f"height: {height}, width: {width}"
             )
-        terminal_width = shutil.get_terminal_size().columns
-        needed_width = width * 4 + 2
-        if needed_width >= terminal_width:
-            max_width = (terminal_width - 2) // 4
-            raise ValueError(f"Width too big for terminal. Max. is {max_width}")
-        if height > 500:
-            raise ValueError("Max. height is 500")
         if entry_pos == exit_pos:
             raise ValueError(
                 f"Entry/ exit can't be equal, "
