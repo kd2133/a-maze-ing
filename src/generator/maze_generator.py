@@ -1,4 +1,5 @@
 import random
+import shutil
 
 
 logo_42 = [
@@ -31,6 +32,12 @@ class MazeGenerator:
                 f"Height/ Width must be higher than 2, "
                 f"height: {height}, width: {width}"
             )
+        terminal_width = shutil.get_terminal_size().columns
+        print(shutil.get_terminal_size().columns)
+        needed_width = width * 4 + 2
+        if needed_width >= terminal_width:
+            max_width = (terminal_width - 2) // 4
+            raise ValueError(f"Max. width is {max_width}")
         if entry_pos == exit_pos:
             raise ValueError(
                 f"Entry/ exit can't be equal, "
@@ -120,7 +127,7 @@ class MazeGenerator:
             and self.height >= logo_h + margin * 2
         )
         if not logo_fits:
-            raise ValueError("Grid too small for logo!")
+            return
         start_x = int((self.width - logo_w) / 2)
         start_y = int((self.height - logo_h) / 2)
         for y in range(logo_h):
@@ -138,15 +145,14 @@ class MazeGenerator:
 
     def dfs(self) -> None:
         stack = [self.grid[0][0]]
-        stack[0].visited = True
         while stack:
             current = stack[-1]
+            current.visited = True
             neighbors = self.get_unvisited_neighbors(current)
             if neighbors:
                 neighbor = random.choice(list(neighbors.values()))
                 self.set_walls(current, neighbor, False)
                 stack.append(neighbor)
-                neighbor.visited = True
             else:
                 stack.pop()
 
