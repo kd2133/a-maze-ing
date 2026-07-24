@@ -1,4 +1,5 @@
 import random
+import shutil
 from src.generator.maze_generator import MazeGenerator, Cell
 
 
@@ -30,6 +31,14 @@ def display(
         change_color: bool = False
         ) -> None:
     global last_wall_color
+
+    terminal_width = shutil.get_terminal_size().columns
+    needed_width = maze.width * 4 + 2
+    if needed_width >= terminal_width:
+        max_width = (terminal_width - 2) // 4
+        raise ValueError(f"Width too big for terminal. Max. is {max_width}")
+    if maze.height > 500:
+        raise ValueError("Max. height is 500")
 
     if change_color or last_wall_color is None:
         last_wall_color = pick_color(WALL_COLORS, last_wall_color)
