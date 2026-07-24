@@ -28,7 +28,7 @@ def bfs(maze: MazeGenerator) -> list[str]:
                 visited.add(neighbor)
                 came_from[neighbor] = (current, direction)
                 queue.append(neighbor)
-    raise ValueError("couldn't find path between entry and exit")
+    raise Exception("Couldn't find path between entry and exit")
 
 
 def gen_path_list(

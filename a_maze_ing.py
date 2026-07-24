@@ -84,14 +84,14 @@ def main() -> None:
     except ValueError as e:
         print(f"Configuration error: {e}", file=sys.stderr)
         sys.exit(1)
+    except EOFError:
+        print("\n\nEOF Error", file=sys.stderr)
+        sys.exit(1)
     except KeyboardInterrupt:
         print("\n\nGoodbye!", file=sys.stderr)
         sys.exit(1)
-    except EOFError as e:
-        print(f"\n\nEOF Error: {e}", file=sys.stderr)
-        sys.exit(1)
     except Exception as e:
-        print(f"Unexpected error: {e}", file=sys.stderr)
+        print(f"\n\nUnexpected error: {e}", file=sys.stderr)
         traceback.print_exc()  # rausnehmen vor Abgabe !!!!!!!!!!!!!!
         sys.exit(1)
 
