@@ -38,6 +38,8 @@ class MazeGenerator:
         if needed_width >= terminal_width:
             max_width = (terminal_width - 2) // 4
             raise ValueError(f"Max. width is {max_width}")
+        if height > 500:
+            raise ValueError("Max. height is 500")
         if entry_pos == exit_pos:
             raise ValueError(
                 f"Entry/ exit can't be equal, "
