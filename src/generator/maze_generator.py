@@ -33,11 +33,10 @@ class MazeGenerator:
                 f"height: {height}, width: {width}"
             )
         terminal_width = shutil.get_terminal_size().columns
-        print(shutil.get_terminal_size().columns)
         needed_width = width * 4 + 2
         if needed_width >= terminal_width:
             max_width = (terminal_width - 2) // 4
-            raise ValueError(f"Max. width is {max_width}")
+            raise ValueError(f"Width too big for terminal. Max. is {max_width}")
         if height > 500:
             raise ValueError("Max. height is 500")
         if entry_pos == exit_pos:
