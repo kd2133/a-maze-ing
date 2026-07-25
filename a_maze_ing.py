@@ -1,7 +1,7 @@
 import sys
 import traceback
 from src.config.parser import parse_config
-from src.generator.maze_generator import MazeGenerator
+from mazegen import MazeGenerator
 from src.export.hex_export import hex_export
 from src.ui.display import display
 
