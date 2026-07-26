@@ -1,6 +1,6 @@
 import random
 import shutil
-from mazegen import MazeGenerator, Cell
+from src.mazegen import MazeGenerator, Cell
 
 
 last_wall_color: str | None = None
