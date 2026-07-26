@@ -1,4 +1,4 @@
-from mazegen import MazeGenerator
+from src.mazegen import MazeGenerator
 from src.solver.maze_solver import bfs
 
 

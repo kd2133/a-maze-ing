@@ -11,7 +11,24 @@ logo_42 = [
 
 
 class Cell:
+    """Represents a single cell within the grid.
+
+    Attributes:
+        y: The y-coordinate (row) of the cell within the grid.
+        x: The x-coordinate (column) of the cell within the grid.
+        walls: A dictionary indicating whether the wall is closed (True)
+            or open (False) for each cardinal direction.
+        visited: Indicates if the cell was visited by DFS algorithm.
+        is_logo: True if cell is part of the logo.
+        is_path: True if the cell is part of the solution path.
+    """
     def __init__(self, y: int, x: int) -> None:
+        """Initializes a new cell with closed walls.
+
+        Args:
+            y: The coordinate (row) of the cell within the grid.
+            x: The coordinate (column) of the cell within the grid.
+        """
         self.x = x
         self.y = y
         self.walls = {'N': True, 'E': True, 'S': True, 'W': True}
@@ -21,11 +38,31 @@ class Cell:
 
 
 class MazeGenerator:
+    """Creates a grid containing cell objects and generates a maze
+        using Depth First Search (DFS).
+    """
     def __init__(
         self, width: int, height: int, entry_pos: tuple[int, int],
         exit_pos: tuple[int, int], output_file: str,
-        seed: int | None, perfect: bool = False
+        seed: int | None, perfect: bool
     ) -> None:
+        """Initializes MazeGenerator() and creates a maze.
+
+        Args:
+            width: Width of the labyrinth (amount of columns)
+            height: Height of the labyrinth (amount of rows)
+            entry_pos: Entry coordinates of the solver
+            exit_pos: Exit coordinates of the solver
+            output_file: Path to the file which saves the maze
+            seed: Seed for reproducibility
+            perfect: If True the maze has only one solution path.
+                If False, additional walls will be removed to
+                create alternative solution paths
+
+        Raises:
+            ValueError: If width or height too little,
+                entry and exit identical or outside the grid
+        """
         if width <= 2 or height <= 2:
             raise ValueError(
                 f"Height/ Width must be higher than 2, "
@@ -53,6 +90,7 @@ class MazeGenerator:
         self.generate_maze()
 
     def generate_maze(self) -> None:
+        """Controls generation process"""
         self.build_grid()
         self.apply_logo()
         self.validate_logo_entry_exit()
@@ -61,6 +99,7 @@ class MazeGenerator:
             self.perfect_false()
 
     def build_grid(self) -> None:
+        """Creates grid containing cell objects based on height and width"""
         grid = []
         for y in range(self.height):
             row = []
@@ -70,6 +109,15 @@ class MazeGenerator:
         self.grid = grid
 
     def get_neighbors(self, cell: Cell) -> dict[str, Cell]:
+        """Determine all neighbors of a cell
+
+        Args:
+            cell: The cell of which the neighbors are looked for
+
+        Returns:
+            A dictionary that has the cardinal direction (key)
+            and the position (value) of the neigbors
+        """
         y = cell.y
         x = cell.x
         neighbors = {}
@@ -85,16 +133,32 @@ class MazeGenerator:
         return neighbors
 
     def get_unvisited_neighbors(self, cell: Cell) -> dict[str, Cell]:
+        """Specifically used in DFS, searches for neighbors that were
+            neither visited or are part of the logo
+
+        Args:
+            cell: The cell of which the unvisited neighbors are looked for
+
+        Returns: A dictionary that has the cardinal direction (key)
+                and the position (value) of the unvisited neighbors
+        """
         neighbors = self.get_neighbors(cell)
         unvisited_neighbors = {
             key: value for key, value in neighbors.items()
-            if not neighbors[key].visited and not neighbors[key].is_logo
+            if not value.visited and not value.is_logo
         }
         return unvisited_neighbors
 
     def set_walls(
         self, current_cell: Cell, next_cell: Cell, bool_var: bool
     ) -> None:
+        """Sets or removes the wall between two neighboring cells
+
+        Args:
+            current_cell: The current cell
+            next_cell: The neighbor cell
+            bool_var: True sets the wall - False removes the wall
+        """
         if current_cell.y - 1 == next_cell.y:
             current_cell.walls['N'] = bool_var
             next_cell.walls['S'] = bool_var
@@ -109,6 +173,9 @@ class MazeGenerator:
             next_cell.walls['E'] = bool_var
 
     def apply_logo(self) -> None:
+        """Applies the logo to the grid, if enough room
+            Sets cell.is_logo to True
+        """
         margin = 2
         logo = logo_42
         logo_h = len(logo)
@@ -127,6 +194,11 @@ class MazeGenerator:
                     self.grid[start_y + y][start_x + x].is_logo = True
 
     def validate_logo_entry_exit(self) -> None:
+        """Validates if entry or exit are on the logo (.is_logo = True)
+
+        Raises:
+            ValueError: If entry or exit are on the logo
+        """
         y, x = self.entry
         if self.grid[y][x].is_logo:
             raise ValueError("Entry can't be on logo")
@@ -135,6 +207,7 @@ class MazeGenerator:
             raise ValueError("Exit can't be on logo")
 
     def dfs(self) -> None:
+        """Generates paths in the grid, making it a maze"""
         stack = [self.grid[0][0]]
         while stack:
             current = stack[-1]
@@ -148,6 +221,14 @@ class MazeGenerator:
                 stack.pop()
 
     def is_3x3(self, cell: Cell) -> bool:
+        """Checks if there is an open 3x3 area (no interior walls)
+
+        Args:
+            cell: Upper left cell of the 3x3 area to be checked
+
+        Returns:
+            True, if the area has no interior walls
+        """
         y = cell.y
         x = cell.x
         is_3x3 = [
@@ -166,6 +247,11 @@ class MazeGenerator:
         return False
 
     def has_3x3(self) -> bool:
+        """Searches the entire maze for open 3x3 areas
+        
+        Returns:
+            True, if one open 3x3 area is found
+        """
         for y in range(self.height - 2):
             for x in range(self.width - 2):
                 if self.is_3x3(self.grid[y][x]):
@@ -173,6 +259,11 @@ class MazeGenerator:
         return False
 
     def perfect_false(self) -> None:
+        """Randomly removes extra walls to open alternative paths
+
+            30% of the walls will be opened
+            If there is an open 3x3 area, the wall will be placed again
+        """
         neighbors_with_wall = []
         for row in self.grid:
             for cell in row:
