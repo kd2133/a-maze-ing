@@ -1,5 +1,5 @@
 import random
-
+import sys
 
 logo_42 = [
     [1, 0, 0, 0, 1, 1, 1],
@@ -186,6 +186,7 @@ class MazeGenerator:
             and self.height >= logo_h + margin * 2
         )
         if not logo_fits:
+            print("Config to small for 42 Logo!", file=sys.stderr)
             return
         start_x = int((self.width - logo_w) / 2)
         start_y = int((self.height - logo_h) / 2)
