@@ -10,7 +10,7 @@ install:
 	@echo "Nothing to be installed..."
 
 debug:
-	$(PYTHON) -m pdb $(NAME)
+	$(PYTHON) -m pdb $(NAME) $(CONFIG)
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
