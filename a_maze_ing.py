@@ -6,7 +6,9 @@ from src.export.hex_export import hex_export
 from src.ui.display import display
 
 
-def build_maze_convert_config(config: dict[str, str]) -> tuple[MazeGenerator, str]:
+def build_maze_convert_config(
+        config: dict[str, str]
+        ) -> tuple[MazeGenerator, str]:
     width = int(config['width'])
     height = int(config['height'])
 
@@ -60,8 +62,8 @@ def main() -> None:
             user_input = input("Choice? (1-4): ")
             if user_input == "1":
                 config = parse_config(sys.argv[1])
-                maze = build_maze_convert_config(config)
-                hex_export(maze, maze.output_file)
+                maze, output_file = build_maze_convert_config(config)
+                hex_export(maze, output_file)
                 display(maze)
             elif user_input == "2":
                 if path:
