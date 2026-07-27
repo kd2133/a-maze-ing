@@ -6,19 +6,7 @@ from src.export.hex_export import hex_export
 from src.ui.display import display
 
 
-def build_maze_convert_config(config: dict[str, str]) -> MazeGenerator:
-    """Build a MazeGenerator from a parsed config disctionary.
-
-    Converts raw string values from the config file (width, height,
-    entry/exit coordinates, perfect flag, seed) into the correct
-    types and returns the maze instance.
-
-    Returns:
-        MazeGenerator instance.
-
-    Raises:
-        ValueError: If the 'perfect' value is not 'true' or 'false'.
-    """
+def build_maze_convert_config(config: dict[str, str]) -> tuple[MazeGenerator, str]:
     width = int(config['width'])
     height = int(config['height'])
 
@@ -40,32 +28,28 @@ def build_maze_convert_config(config: dict[str, str]) -> MazeGenerator:
         seed_value = int(config['seed'])
     else:
         seed_value = None
-    return MazeGenerator(
-        width=width,
-        height=height,
-        entry_pos=entry_pos,
-        exit_pos=exit_pos,
-        output_file=config['output_file'],
-        perfect=perfect_bool,
-        seed=seed_value
+    return (
+        MazeGenerator(
+            width=width,
+            height=height,
+            entry_pos=entry_pos,
+            exit_pos=exit_pos,
+            perfect=perfect_bool,
+            seed=seed_value
+        ),
+        config['output_file']
     )
 
 
 def main() -> None:
-    """Run the interactive maze program.
-
-    Loads the config, generates and displays a maze, then shows a
-    menu for regenerating, toggling the path, rotating colors, or
-    quitting.
-    """
     if len(sys.argv) != 2:
         print(f"Usage: python3 {sys.argv[0]} <config_file>")
         sys.exit(1)
     try:
         config = parse_config(sys.argv[1])
-        maze = build_maze_convert_config(config)
+        maze, output_file = build_maze_convert_config(config)
         path = False
-        hex_export(maze, maze.output_file)
+        hex_export(maze, output_file)
         display(maze)
         while True:
             print("\n=== A-Maze-ing ===")
