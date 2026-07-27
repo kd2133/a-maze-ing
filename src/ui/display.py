@@ -63,7 +63,7 @@ def display(
 
     def get_cell_type(cell: Cell) -> str:
         """Return the colored block string for a single cell"""
-        pos = (cell.y, cell.x)
+        pos = (cell.x, cell.y)
         if pos == maze.entry:
             return entry_cell
         if pos == maze.exit:

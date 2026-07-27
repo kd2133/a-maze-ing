@@ -27,8 +27,8 @@ def bfs(maze: MazeGenerator) -> list[str]:
     Raises:
         ValueError: If no path exists between entry and exit.
     """
-    start_y, start_x = maze.entry
-    end_y, end_x = maze.exit
+    start_x, start_y = maze.entry
+    end_x, end_y = maze.exit
     start = maze.grid[start_y][start_x]
     end = maze.grid[end_y][end_x]
     queue = deque([start])
