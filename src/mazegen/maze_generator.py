@@ -43,8 +43,8 @@ class MazeGenerator:
     """
     def __init__(
         self, width: int, height: int, entry_pos: tuple[int, int],
-        exit_pos: tuple[int, int], output_file: str,
-        seed: int | None, perfect: bool
+        exit_pos: tuple[int, int], perfect: bool,
+        seed: int | None = None
     ) -> None:
         """Initializes MazeGenerator() and creates a maze.
 
@@ -53,7 +53,6 @@ class MazeGenerator:
             height: Height of the labyrinth (amount of rows).
             entry_pos: Entry coordinates of the solver.
             exit_pos: Exit coordinates of the solver.
-            output_file: Path to the file which saves the maze.
             seed: Seed for reproducibility.
             perfect: If True the maze has only one solution path.
                 If False, additional walls will be removed to
@@ -83,7 +82,6 @@ class MazeGenerator:
         self.height = height
         self.entry = entry_pos
         self.exit = exit_pos
-        self.output_file = output_file
         self.perfect = perfect
         self.seed = random.Random(seed)
         self.grid: list[list[Cell]] = []
