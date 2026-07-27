@@ -7,6 +7,18 @@ from src.ui.display import display
 
 
 def build_maze_convert_config(config: dict[str, str]) -> MazeGenerator:
+    """Build a MazeGenerator from a parsed config disctionary.
+
+    Converts raw string values from the config file (width, height,
+    entry/exit coordinates, perfect flag, seed) into the correct
+    types and returns the maze instance.
+
+    Returns:
+        MazeGenerator instance.
+
+    Raises:
+        ValueError: If the 'perfect' value is not 'true' or 'false'.
+    """
     width = int(config['width'])
     height = int(config['height'])
 
@@ -40,6 +52,12 @@ def build_maze_convert_config(config: dict[str, str]) -> MazeGenerator:
 
 
 def main() -> None:
+    """Run the interactive maze program.
+
+    Loads the config, generates and displays a maze, then shows a
+    menu for regenerating, toggling the path, rotating colors, or
+    quitting.
+    """
     if len(sys.argv) != 2:
         print(f"Usage: python3 {sys.argv[0]} <config_file>")
         sys.exit(1)
