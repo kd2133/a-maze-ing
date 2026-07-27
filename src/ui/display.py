@@ -21,6 +21,7 @@ SPACE = "  "
 
 
 def pick_color(color_list: list[str], last: str | None) -> str:
+    """Pick a random color from the list, avoiding the last used one"""
     choices = [color for color in color_list if color != last] or color_list
     return random.choice(choices)
 
@@ -30,6 +31,17 @@ def display(
         path: bool = False,
         change_color: bool = False
         ) -> None:
+    """Render the maze to the terminal using colored blocks.
+
+    Args:
+        maze: MazeGenerator instance to render
+        path: If True, highlight the solved path.
+        change_color: If True, pick a new random wall color for this render.
+
+    Raises:
+        ValueError: If the maze is too wide for the current size of the
+            terminal, or if height is more than 500.
+    """
     global last_wall_color
 
     terminal_width = shutil.get_terminal_size().columns
@@ -50,6 +62,7 @@ def display(
     path_cell = f"{PATH_COLOR}██{RESET}"
 
     def get_cell_type(cell: Cell) -> str:
+        """Return the colored block string for a single cell"""
         pos = (cell.y, cell.x)
         if pos == maze.entry:
             return entry_cell

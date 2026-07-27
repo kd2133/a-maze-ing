@@ -1,4 +1,15 @@
 def parse_config(filepath: str) -> dict[str, str]:
+    """Parse config file, check for missing / unauthorized key.
+
+    Args:
+        filepath: File to be parsed.
+
+    Returns:
+        A dictionary containing required data for maze.
+
+    Raises:
+        ValueError: If key missing / unauthorized.
+    """
     required_keys = {
         "width", "height", "entry",
         "exit", "output_file", "perfect"

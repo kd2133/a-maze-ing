@@ -3,6 +3,16 @@ from src.solver.maze_solver import bfs
 
 
 def hex_export(maze: MazeGenerator, filename: str) -> None:
+    """Shows the cell's walls state using one hex-digit.
+
+    Args:
+        maze: MazeGenerator instance.
+        filename: output_file filename.
+
+    Raises:
+        ValueError: If filename is None / empty.
+        OSError: If open / write process fails.
+    """
     if not filename:
         raise ValueError("No output file was passed.")
     try:

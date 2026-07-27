@@ -3,6 +3,7 @@ from src.mazegen import MazeGenerator, Cell
 
 
 def get_open_neighbors(maze: MazeGenerator, cell: Cell) -> dict[str, Cell]:
+    """Return the neighbors of a cell that are reachable (no walls)."""
     neighbors = maze.get_neighbors(cell)
     return {
         direction: neighbor
@@ -12,6 +13,20 @@ def get_open_neighbors(maze: MazeGenerator, cell: Cell) -> dict[str, Cell]:
 
 
 def bfs(maze: MazeGenerator) -> list[str]:
+    """Find the shortest path from maze's entry to exit.
+
+    Uses breadth-first search and sets every cell on the path
+    to 'is_path = True'.
+
+    Args:
+        maze: MazeGenerator instance.
+
+    Returns:
+        A list of cardinal directions to walk from entry to exit.
+
+    Raises:
+        ValueError: If no path exists between entry and exit.
+    """
     start_y, start_x = maze.entry
     end_y, end_x = maze.exit
     start = maze.grid[start_y][start_x]
@@ -28,7 +43,7 @@ def bfs(maze: MazeGenerator) -> list[str]:
                 visited.add(neighbor)
                 came_from[neighbor] = (current, direction)
                 queue.append(neighbor)
-    raise Exception("Couldn't find path between entry and exit")
+    raise ValueError("Couldn't find path between entry and exit")
 
 
 def gen_path_list(
@@ -36,6 +51,11 @@ def gen_path_list(
     start: Cell,
     end: Cell,
 ) -> list[str]:
+    """Reconstruct the path from start to end using the came_from dict.
+
+    Sets each cell on the path to 'is_path = True'.
+
+    """
     path: list[str] = []
     current = end
     while current is not start:
