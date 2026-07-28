@@ -1,5 +1,5 @@
 from collections import deque
-from src.mazegen import MazeGenerator, Cell
+from .maze_generator import MazeGenerator, Cell
 
 
 def get_open_neighbors(maze: MazeGenerator, cell: Cell) -> dict[str, Cell]:
