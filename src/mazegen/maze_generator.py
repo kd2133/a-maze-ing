@@ -1,5 +1,6 @@
 import random
 import sys
+
 logo_42 = [
     [1, 0, 0, 0, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 1],
@@ -34,7 +35,7 @@ class Cell:
         self.visited = False
         self.is_logo = False
         self.is_path = False
-    
+
     def __repr__(self) -> str:
         return f"Cell({self.y},{self.x})"
 
@@ -42,8 +43,8 @@ class Cell:
 class MazeGenerator:
     """Reusable maze generation module.
 
-    This module provides the MazeGenerator class, which can be imported and used
-    in other projects to generate a maze.
+    This module provides the MazeGenerator class, which can be imported and
+    used in other projects to generate a maze.
 
     Example:
         from mazegen import MazeGenerator
@@ -234,7 +235,7 @@ class MazeGenerator:
         Raises:
             ValueError: If entry or exit are on the logo.
         """
-        x, y= self.entry
+        x, y = self.entry
         if self.grid[y][x].is_logo:
             raise ValueError("Entry can't be on logo")
         x, y = self.exit
