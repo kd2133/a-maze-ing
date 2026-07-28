@@ -13,9 +13,9 @@ def build_maze_convert_config(
     height = int(config['height'])
 
     x, y = config['entry'].replace('.', ',').split(",")
-    entry_pos = int(y), int(x)
+    entry_pos = int(x), int(y)
     x, y = config['exit'].replace('.', ',').split(",")
-    exit_pos = int(y), int(x)
+    exit_pos = int(x), int(y)
     perfect_val = config['perfect'].lower()
 
     if perfect_val == 'true':

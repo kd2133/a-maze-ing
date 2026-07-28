@@ -33,12 +33,8 @@ def hex_export(maze: MazeGenerator, filename: str) -> None:
                     line += f"{value:X}"
                 file.write(line + "\n")
 
-            y, x = maze.entry
-            entry_pos = f"{x},{y}"
-            file.write("\n" + entry_pos + "\n")
-            y, x = maze.exit
-            exit_pos = f"{x},{y}"
-            file.write(exit_pos)
+            file.write(f"\n{maze.entry[0]},{maze.entry[1]}\n")
+            file.write(f"{maze.exit[0]},{maze.exit[1]}")
             file.write("\n")
             file.write("".join(path) + "\n")
     except OSError as e:
