@@ -37,6 +37,7 @@ class Cell:
         self.is_path = False
 
     def __repr__(self) -> str:
+        """Print cell coordinates instead of address."""
         return f"Cell({self.y},{self.x})"
 
 
@@ -70,8 +71,8 @@ class MazeGenerator:
         height: Number of rows in the maze.
         entry_pos: Entry coordinates (x, y).
         exit_pos: Exit coordinates (x, y).
-        perfect: If True, the maze has a single solution path
-        seed: Optional seed for reproducible generation
+        perfect: If True, the maze has a single solution path.
+        seed: Optional seed for reproducible generation.
 
     Accessing the result:
         - maze.grid contains generated maze as a 2D list of Cell objects.
