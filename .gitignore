@@ -3,3 +3,4 @@ output_maze.txt
 .mypy_cache
 output_validator.py
 *.egg-info/
+venv/
