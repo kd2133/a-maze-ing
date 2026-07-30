@@ -44,6 +44,7 @@ def display(
     """
     global last_wall_color
 
+    print("\033[H\033[J", end="")
     terminal_width = shutil.get_terminal_size().columns
     needed_width = maze.width * 4 + 2
     if needed_width >= terminal_width:
