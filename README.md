@@ -163,45 +163,84 @@ of this repository.
 **Building the package** (from the repository root):
 
 ```sh
+python3 -m venv venv
+source venv/bin/activate
 pip install build
-python -m build --wheel
-# -> dist/mazegen-1.0.0-py3-none-any.whl
+python3 -m build
 ```
 
-**Installing and using it** in any other project:
+**Installing** it in any other project:
 
 ```sh
 pip install mazegen-1.0.0-py3-none-any.whl
 ```
 
-```python
-from mazegen import MazeGenerator, bfs
+**Overall** (`mazegen/__init__.py`) — *Reusable maze generation module.*
+This module provides the `MazeGenerator` class, which can be imported and
+used in other projects to generate a maze. It exposes two public symbols:
+the `MazeGenerator` class (below) and the `bfs` solver.
 
-# instantiate a generator with custom parameters (size, seed, ...)
+### `MazeGenerator` (generator)
+
+```python
+from mazegen import MazeGenerator
+from mazegen import bfs
+
 maze = MazeGenerator(
     width=20,
-    height=15,
-    entry_pos=(0, 0),     # note: (row, col), i.e. (y, x)
-    exit_pos=(14, 19),
+    height=20,
+    entry_pos=(0, 0),
+    exit_pos=(19, 19),
     perfect=True,
-    seed=42,              # optional, omit for a random maze
+    seed=42,
 )
 
-# access the generated structure: a list[list[Cell]] grid
-cell = maze.grid[0][0]
-print(cell.walls)   # {'N': True, 'E': False, 'S': True, 'W': True}
-print(cell.is_logo) # True if this cell is part of the "42" pattern
+# Access the generated structure
+grid = maze.grid
 
-# access at least a solution: shortest path from entry to exit
-path = bfs(maze)
-print("".join(path))  # e.g. "EESWW..."
+# Access a solution path from entry to exit
+solution = bfs(maze)
 ```
+
+**Parameters:**
+
+- `width`: Number of columns in the maze.
+- `height`: Number of rows in the maze.
+- `entry_pos`: Entry coordinates (x, y).
+- `exit_pos`: Exit coordinates (x, y).
+- `perfect`: If True, the maze has a single solution path.
+- `seed`: Optional seed for reproducible generation.
+
+**Accessing the result:**
+
+`maze.grid` is a 2D list of `Cell` objects (`maze.grid[y][x]`). Each `Cell`
+has:
+
+- `maze.grid[y][x].walls`: dict with keys (N, E, S, W) — True = wall present.
+- `maze.grid[y][x].x` / `.y`: the cell's column and row position.
+- `maze.grid[y][x].is_path`: True if the cell lies on the solved path
+  (after `bfs()`).
+- `maze.grid[y][x].is_logo`: True if the cell is part of the maze's logo
+  pattern.
+
+> **Note:** `entry_pos`/`exit_pos` use `(x, y)` order when passed in, but
+> grid access uses `[y][x]` order, matching standard indexing.
+
+### `bfs` (solver)
+
+> Find the shortest path from maze's entry to exit.
+>
+> Uses breadth-first search and sets every cell on the path to
+> `is_path = True`.
+
+- **Args:** `maze` — a `MazeGenerator` instance.
+- **Returns:** a list of cardinal directions (`N`/`E`/`S`/`W`) to walk from
+  entry to exit.
+- **Raises:** `ValueError` if no path exists between entry and exit.
 
 `MazeGenerator` and `Cell` are defined in `mazegen/maze_generator.py`,
 and the `bfs` solver in `mazegen/maze_solver.py`; both are re-exported
-from `mazegen/__init__.py`. Note that `entry_pos`/`exit_pos` are
-`(row, col)` tuples internally, while the CLI config file uses `x,y`
-order — the CLI layer (`a_maze_ing.py`) does that conversion for you.
+from `mazegen/__init__.py`.
 
 This is also the only part of the codebase that is reusable/importable
 independently of this project; everything else (`src/config`,
@@ -212,13 +251,7 @@ around.
 ## Resources
 
 - [Maze generation algorithm — Wikipedia](https://en.wikipedia.org/wiki/Maze_generation_algorithm)
-- Jamis Buck, *"Buckblog" Maze Generation series* — the classic
-  reference/write-up on recursive-backtracker, Prim's and Kruskal's maze
-  generation algorithms.
-- [Python `typing` module documentation](https://docs.python.org/3/library/typing.html)
-- [mypy documentation](https://mypy.readthedocs.io/) (used for the strict
-  static type-checking required by this project)
-- [flake8 documentation](https://flake8.pycqa.org/)
+- [BFS, DFS Youtube video — YouTube](https://www.youtube.com/watch?v=cS-198wtfj0)
 - [Python Packaging User Guide](https://packaging.python.org/) — building
   and installing the `mazegen` wheel with `build`/`setuptools`
 
@@ -231,20 +264,24 @@ cross-checking the implementation against public 42 `a_maze_ing`
 repositories for comparison. It was not used to generate the core
 generation/solving logic or the docstrings, which were written by hand.
 
-> _TODO (team): review this paragraph and adjust it to reflect exactly
-> what AI was used for during your own work on this project (which
-> tasks, which files/parts) — this needs to be accurate and something
-> you can each personally explain during the evaluation._
-
 ## Team and project management
 
-> _TODO (team): fill in this section yourselves — it needs to be an
-> honest, first-person account, not something written on your behalf._
+**Roles:** 
+- ***kdakovic:***
+  - MazeGenerator
+  - Parser
+  - HexExport
+  - Standalone module
 
-- **Roles:** _who worked on what (generation, solver, display, config
-  parsing, packaging, docs, ...)_
-- **Planning:** _how you initially planned the work, and how that plan
-  changed by the end_
-- **Retrospective:** _what worked well, what you'd do differently_
-- **Tools:** _any specific tools you used (git workflow, linters, IDEs,
-  AI tools, etc.) beyond what's already listed above_
+- ***nkerstin:***
+  - Solver
+  - Display
+  - Makefile
+  - README
+
+- ***Both:***
+  - Main
+  - Planning
+  - Testing
+  - DevOps
+  - Project-Setup
