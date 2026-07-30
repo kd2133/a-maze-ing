@@ -1,5 +1,4 @@
 import sys
-import traceback
 from src.config.parser import parse_config
 from src.mazegen import MazeGenerator
 from src.export.hex_export import hex_export
@@ -96,7 +95,6 @@ def main() -> None:
         sys.exit(1)
     except Exception as e:
         print(f"\n\nUnexpected error: {e}", file=sys.stderr)
-        traceback.print_exc()  # rausnehmen vor Abgabe !!!!!!!!!!!!!!
         sys.exit(1)
 
 

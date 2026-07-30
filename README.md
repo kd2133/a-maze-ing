@@ -285,3 +285,16 @@ generation/solving logic or the docstrings, which were written by hand.
   - Testing
   - DevOps
   - Project-Setup
+
+**Anticipated planning and how it evolved until the end:**
+
+- We had a MazeConfig class that was used as param for the MazeGenerator class, which would have prevented the reusability of the standalone mazegen package.
+
+**What worked well and what could be improved:**
+
+- Planing a project from top to bottom (function hierarchy). 
+
+**Have you used any specific tools? Which ones?**
+- VS Code
+- Claude (see AI usage)
+- Github
